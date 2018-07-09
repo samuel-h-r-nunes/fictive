@@ -1,0 +1,33 @@
+{
+  "name": "fictive",
+  "version": "1.0.0",
+  "description": "Fictive provides simple tools to implement client-side mocks of services. Fake API calls without the need for an internet connection, so that you can develop and demonstrate your prototype anyhwere.",
+  "main": "index.js",
+  "scripts": {
+    "test": "standard & jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samuel-h-r-nunes/fictive.git"
+  },
+  "keywords": [
+    "client-side",
+    "local",
+    "developmment",
+    "prototyping",
+    "api",
+    "service",
+    "mock",
+    "fake"
+  ],
+  "author": "Samuel Nunes <samuel.h.r.nunes@gmail.com> (https://github.com/samuel-h-r-nunes)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/samuel-h-r-nunes/fictive/issues"
+  },
+  "homepage": "https://github.com/samuel-h-r-nunes/fictive#readme",
+  "devDependencies": {
+    "jest": "^23.3.0",
+    "standard": "^11.0.1"
+  }
+}
