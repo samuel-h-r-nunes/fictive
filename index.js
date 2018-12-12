@@ -27,6 +27,9 @@ class FakeDB {
    *                            be an entity of type array, as this will behave
    *                            like a database table.
    * @param {Object} entry      Data object to insert as an entry.
+   * @param {String} primaryKey If specified, this field will be auto-generated
+   *                            for the new entry to simulate "auto-increment",
+   *                            according to the existing data. _(default: undefined)_
    */
   insert (entityName, entry, primaryKey) {
     if (entry.constructor !== Object) {

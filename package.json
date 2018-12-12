@@ -13,12 +13,14 @@
   "keywords": [
     "client-side",
     "local",
+    "mobile",
     "developmment",
     "prototyping",
     "api",
     "service",
     "mock",
-    "fake"
+    "fake",
+    "wrapper"
   ],
   "author": "Samuel Nunes <samuel.h.r.nunes@gmail.com> (https://github.com/samuel-h-r-nunes)",
   "license": "MIT",
