@@ -1,6 +1,6 @@
 {
   "name": "fictive",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Fictive provides simple tools to implement client-side mocks of services. Fake API calls without the need for an internet connection, so that you can develop and demonstrate your prototype anyhwere.",
   "main": "index.js",
   "scripts": {
