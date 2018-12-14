@@ -107,7 +107,7 @@ Again, we simulate network overhead using a default delay of 200 ms, after which
 
 Mocking a database may seem overkill, but it can be useful to get a feel of the user experience in complex workflows before the actual API is available.
 
-To be clear, what we really need to mock is just the persistence and transformation of data over time. Fortunately, for our purpose of simulating an API during development and testing, (1) this persistence can be just temporary and (2) the datasets are typically very small.
+To be clear, what we need to mock is only the persistence and transformation of data over time. Fortunately, for our purpose of simulating an API during development and testing, (1) this persistence can be just temporary and (2) the datasets are typically very small.
 
 With that in mind,  `fictive` takes a minimalist approach to database mocking, without using a real database. Instead, the `FakeDB` class provides a very thin layer which is nothing more than a wrapper to store and manipulate javascript arrays using regular javascript array methods.
 
