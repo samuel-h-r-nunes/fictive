@@ -36,7 +36,7 @@ When `USE_MOCK_API` is enabled, the fake implementation will be loaded and execu
 
 Regardless of whether you're mocking your service calls, using these wrapper functions is a very useful pattern. It allows you to develop your frontend using external services without worrying how they're actually implemented. And if your API changes in the future, you only need to adjust the wrapper functions without touching the code that makes use of them!
 
-To keep things organised, the following folder structure is suggested:
+To keep things organised, the following directory structure is suggested:
 
 ```bash
   .
@@ -50,9 +50,9 @@ To keep things organised, the following folder structure is suggested:
   ... ...
 ```
 
-All services are grouped together in a folder of their own. This way, all communication with the outside world (and the corresponding mocks) is centralized in one place.
+All services are grouped together in a directory of their own. This way, all communication with the outside world (and the corresponding mocks) is centralized in one place.
 
-You might have noticed that compared to the first example two things are new here - the files `db.js` and `example.json` inside the `__mock__` folder. These are meant for database mocking, which we will see later on.
+You might have noticed that compared to the first example two things are new here - the files `db.js` and `example.json` inside the `__mock__` directory. These are meant for database mocking, which we will see later on.
 
 ### Mocking different services
 
@@ -107,13 +107,13 @@ Again, we simulate network overhead using a default delay of 200 ms, after which
 
 Mocking a database may seem overkill, but it can be useful to get a feel of the user experience in complex workflows before the actual API is available.
 
-To be clear, what we really need to mock is just the persistence and transformation of data over time that is usually achieved with a database. Fortunately, for our purpose of simulating an API during development and testing, (1) this persistence can be just temporary and (2) the datasets are typically very small.
+To be clear, what we really need to mock is just the persistence and transformation of data over time. Fortunately, for our purpose of simulating an API during development and testing, (1) this persistence can be just temporary and (2) the datasets are typically very small.
 
-With this in mind,  `fictive` takes a minimalist approach to database mocking, without using a real database. Instead, the `FakeDB` class provides a very thin layer which is nothing more than a wrapper to store and manipulate javascript arrays using regular javascript array methods.
+With that in mind,  `fictive` takes a minimalist approach to database mocking, without using a real database. Instead, the `FakeDB` class provides a very thin layer which is nothing more than a wrapper to store and manipulate javascript arrays using regular javascript array methods.
 
 ##### Creating the fake database
 
-Before you can mock services using a fake database, you have to create the database itself. This should be done in a centralized place, so that all mocked services can use the same `FakeDB` instance. The recommendation is to do this in `__mock__/db.js` as mentioned before:
+The fake database should be created in a centralized place, so that all mocked services can use the same `FakeDB` instance. Our suggestion is to do this in `__mock__/db.js` as mentioned before:
 
 ```js
 // src/services/__mock__/db.js
