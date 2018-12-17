@@ -1,5 +1,5 @@
 /**
- * Controler object to simulate and manipulate fake data.
+ * Controller object to simulate and manipulate fake data.
  */
 class FakeDB {
   constructor () {
@@ -30,6 +30,9 @@ class FakeDB {
    * @param {String} primaryKey If specified, this field will be auto-generated
    *                            for the new entry to simulate "auto-increment",
    *                            according to the existing data. _(default: undefined)_
+   *
+   * @returns {Number} The primary key value of the inserted value, or `undefined`
+   *                   if no `primaryKey`was specified.
    */
   insert (entityName, entry, primaryKey) {
     if (entry.constructor !== Object) {
@@ -45,7 +48,7 @@ class FakeDB {
 
     entity.push(data)
 
-    return data[primaryKey]
+    return data[primaryKey]||undefined
   }
 
   /**
@@ -56,7 +59,8 @@ class FakeDB {
    *                              like a database table.
    * @param {Function} matchFunc  Annonymous filter function returning `true` for
    *                              entries to be deleted.
-   * @returns {Number}            Number of removed entries.
+   *
+   * @returns {Number} The number of removed entries.
    */
   delete (entityName, matchFunc) {
     const entity = arrayEntity(this.storage, entityName)
@@ -76,6 +80,8 @@ class FakeDB {
    *                              like a database table.
    * @param {Function} filterFunc Annonymous function that returns `true` for
    *                              entries that are considered a match.
+   *
+   * @returns {Array} The results that match the filter function.
    */
   search (entityName, filterFunc) {
     return arrayEntity(this.storage, entityName).filter(filterFunc)
@@ -90,6 +96,8 @@ class FakeDB {
    *                              behave like a database table search.
    * @param {Function} filterFunc Annonymous function that returns `true` for
    *                              entries that are considered a match.
+   *
+   * @returns {Boolean} The results that match the filter function.
    */
   testSome (entityName, filterFunc) {
     return arrayEntity(this.storage, entityName).some(filterFunc)
@@ -100,9 +108,11 @@ class FakeDB {
  * Helper method to validate whether the specified FakeDB entity is an array,
  * and retrieve a reference to its content.
  *
+ * @private
  * @param   {Object} storage    Data object.
  * @param   {String} entityName Name of the entity to validate and retrive.
- * @returns {Array}  Reference to the entity array.
+ *
+ * @returns {Array} A reference to the entity array.
  */
 const arrayEntity = (storage, entityName) => {
   if (!storage[entityName]) {
@@ -120,12 +130,10 @@ const arrayEntity = (storage, entityName) => {
  *
  * _(Inspired by: https://goshakkk.name/why-i-mock-api-in-mobile-apps/)_
  *
- * ---
  * **Example usage:**
  * ```js
  * return delayedPromise('my value', true, 1000)
  * ```
- * ---
  *
  * @param {*}       value   Value that the promise will settle with.
  * @param {Number}  delay   Time (in ms) after which the promise should settle. _(default: `200`)_
@@ -153,12 +161,10 @@ const delayedPromise = (value, delay, success) => {
 /**
  * Create a promise that will resolve with the specified value after a delay.
  *
- * ---
  * **Example usage:**
  * ```js
  * return fakeReply({ token: '12345' })
  * ```
- * ---
  *
  * @param {*}      value Value that the promise will resolve to.
  * @param {Number} delay Time (in ms) after which the promise should resolve. _(default: `200`)_
@@ -173,12 +179,10 @@ const fakeReply = (value, delay) => {
  * Create a promise that will be rejected with the specified value after
  * after a delay.
  *
- * ---
  * **Example usage:**
  * ```js
  * return fakeError('access denied')
  * ```
- * ---
  *
  * @param {*}      value Value that the promise will be rejected with.
  * @param {Number} delay Time (in ms) after which the promise should be rejected. _(default: `200`)_
