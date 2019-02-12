@@ -5,9 +5,9 @@ const fakeError = require('../index').fakeError
 const FakeDB = require('../index').FakeDB
 
 const fixture = [
-  {id: 1, content: 'aaa'},
-  {id: 2, content: 'bbb'},
-  {id: 3, content: 'ccc'}
+  { id: 1, content: 'aaa' },
+  { id: 2, content: 'bbb' },
+  { id: 3, content: 'ccc' }
 ]
 
 it('mocks a successful response', () => {
@@ -21,13 +21,13 @@ it('mocks an error response', () => {
 it('mocks a database table select', () => {
   const fakeDB = new FakeDB()
   fakeDB.create('table', fixture)
-  return expect(fakeDB.search('table', (entry) => entry.id === 2)).toEqual([{id: 2, content: 'bbb'}])
+  return expect(fakeDB.search('table', (entry) => entry.id === 2)).toEqual([{ id: 2, content: 'bbb' }])
 })
 
 it('mocks a database table insert', () => {
   const fakeDB = new FakeDB()
   fakeDB.create('table', fixture)
-  return expect(fakeDB.insert('table', {content: 'new entry'}, 'id')).toEqual(4)
+  return expect(fakeDB.insert('table', { content: 'new entry' }, 'id')).toEqual(4)
 })
 
 it('mocks a database table delete', () => {
@@ -39,6 +39,6 @@ it('mocks a database table delete', () => {
 it('mocks a database table create, insert and select', () => {
   const fakeDB = new FakeDB()
   fakeDB.create('table', fixture)
-  fakeDB.insert('table', {content: 'new entry'}, 'id')
-  return expect(fakeDB.search('table', (entry) => entry.id === 4)).toEqual([{id: 4, content: 'new entry'}])
+  fakeDB.insert('table', { content: 'new entry' }, 'id')
+  return expect(fakeDB.search('table', (entry) => entry.id === 4)).toEqual([{ id: 4, content: 'new entry' }])
 })

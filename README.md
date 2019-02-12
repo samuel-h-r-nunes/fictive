@@ -1,6 +1,6 @@
 # fictive
 
-`fictive` provides simple tools to implement client-side mocks of services. Use it to fake API calls without an internet connection, so that you can develop and demonstrate your prototype anywhere.
+`fictive` provides simple tools to implement client-side mocks of services. Use it to fake API calls without the need for an internet connection, so that you can develop and demonstrate your prototype anyhwere.
 
 ## Install
 
@@ -12,13 +12,13 @@ npm install fictive --save-dev
 
 `fictive` was inspired by [this article](https://goshakkk.name/why-i-mock-api-in-mobile-apps/). During development, especially when developing a mobile app, it's very useful to abstract external services away. The best way to do that is to mock your APIs and services.
 
-However, most available solutions rely on an available internet connection or on a local server that you run from the command line. For mobile app development this is not ideal. You will find yourself needing to show your prototype running directly from your phone, away from your development machine. You need your mocked services to run on the client side.
+However, most available solutions rely on an available internet connection or on a local server that you run from the command line. For mobile app development this is not ideal. You will often find yourself in need of showing your prototype running directly from a phone, away from your development machine. You need your mocked services to run on the client side.
 
 ## Usage
 
 ### Prerequisites
 
-First off, you should wrap your service/API calls in functions that will look (and act) the same regardless of whether the real or the mock API is called.
+First off, you should wrap your service/API calls in functions that will look (and act) the same regardless of whether the real API or the mocked one are called.
 
 ```js
 // src/services/example.js
@@ -103,7 +103,7 @@ export const myExampleFailure = (params) => {
 
 Again, we simulate network overhead using a default delay of 200 ms, after which the promise will reject with the specified value. The delay can be specified via the second (optional) parameter to `fakeError`, just like in `fakeReply`.
 
-#### A mocked database
+#### Mocking persistent data (a fake database)
 
 Mocking a database may seem overkill, but it can be useful to get a feel of the user experience in complex workflows before the actual API is available.
 
@@ -142,6 +142,7 @@ In this simple example, we instantiate `FakeDB` and then use `create()` to creat
   }
 ]
 ```
+
 Further entities can be created via separate calls to `create()`.
 
 **Note:** At the end of `db.js` we simply export our database object. Due to the way how the Node.js module system [works](https://nodejs.org/api/modules.html#modules_require_cache), every time we require this module we will get the exact same object. This means that `db.js` essentially works as a singleton for our fake database.
