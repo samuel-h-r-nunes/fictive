@@ -72,7 +72,7 @@ export const myExample = (params) => {
 
 This will wrap the specified content in a delayed promise and return the result. The promise will resolve to the specified value after a default delay of 200 ms, to simulate network overhead.
 
-For specific scenarios, you can also specify the delay, via the second (optional) parameter to `fakeReply`:
+For specific scenarios, you can also specify the delay, via the second (optional) parameter:
 
 ```js
 // src/services/__mock__/example.js
@@ -109,7 +109,9 @@ Mocking a database may seem overkill, but it can be useful to get a feel of the 
 
 To be clear, what we need to mock is only the persistence and transformation of data over time. Fortunately, for our purpose of simulating an API during development and testing, (1) this persistence can be just temporary and (2) the datasets are typically very small.
 
-With that in mind,  `fictive` takes a minimalist approach to database mocking, without using a real database. Instead, the `FakeDB` class provides a very thin layer which is nothing more than a wrapper to store and manipulate javascript arrays using regular javascript array methods.
+With that in mind, `fictive` takes a minimalist approach to database mocking. Instead of an actual database, the `FakeDB` class provides a very thin layer which is nothing more than a wrapper to store and manipulate javascript arrays using regular javascript array methods. These arrays will persist for as long as your javascript code is running.
+
+Please think of `FakeDB` as just tool for simple data manipulations - to help mock service calls that handle persistent data.
 
 ##### Creating the fake database
 
@@ -147,9 +149,61 @@ Further entities can be created via separate calls to `create()`.
 
 **Note:** At the end of `db.js` we simply export our database object. Due to the way how the Node.js module system [works](https://nodejs.org/api/modules.html#modules_require_cache), every time we require this module we will get the exact same object. This means that `db.js` essentially works as a singleton for our fake database.
 
-##### Inserting and deleting rows
+##### Using the fake database
 
-TODO ...
+To make use of your fake database, you just have to import it in your service mocks:
+
+```js
+// src/services/__mock__/example.js
+
+import db from './db'
+
+export const example = ( /* ... */ ) => {
+
+  // Do something with `db` ...
+
+}
+```
+
+##### Inserting rows
+
+You can insert a row using `insert()`, and specifying the entity name and a data object containing the row data:
+
+```js
+db.insert('users', {
+  id: 3,
+  username: 'jane_doe',
+  password: 'abcde'
+})
+```
+
+Note that there's no validation of schema whatsoever. Each row will get the exact data provided in the second argument, regardless of whether it makes sense. This means that you are responsible for inserting correct data when designing the use cases to mock.
+
+Nevertherless, you can avoid the manual work of calculating auto-incremented primary keys, by specifying the optional third argument `primaryKey` and omitting the corresponding field from the data array:
+
+```js
+const insertedKey = db.insert(
+  'users',
+  { username: 'jane_doe', password: 'abcde' },
+  'id'
+)
+```
+
+##### Deleting rows
+
+You can delete one or more rows using `delete()`, and specifying the entity name and a filter function to locate the rows to delete:
+
+```js
+const totalDeletions = db.delete('users', function (user) {
+  return (user.id === 3)
+})
+```
+
+For simplicity, you can also write the same example using ES6:
+
+```js
+const totalDeletions = db.delete('users', (user) => user.id === 3)
+```
 
 ##### Searching
 
