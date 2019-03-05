@@ -191,25 +191,31 @@ const insertedKey = db.insert(
 
 ##### Deleting rows
 
-You can delete one or more rows using `delete()`, and specifying the entity name and a filter function to locate the rows to delete:
+You can delete one or more rows using `delete()`, and specifying the entity name and a match function to locate the rows to delete:
 
 ```js
-const totalDeletions = db.delete('users', function (user) {
-  return (user.id === 3)
-})
-```
-
-For simplicity, you can also write the same example using ES6:
-
-```js
+// Remove the user with `id` equal to 3
 const totalDeletions = db.delete('users', (user) => user.id === 3)
 ```
 
 ##### Searching
 
-TODO ...
+Searching for a given row, or set of rows is done via `search()`, and specifying the entity name and a filter function:
 
-##### Complex examples
+```js
+// Find users with username starting with "j"
+const results = db.search('users', (user) => user.name.match(/^j/))
+```
+
+Likewise, you can use `testSome()` to check whether there are at least some rows matching your filter:
+
+```js
+if (db.testSome('users', (user) => user.name === 'john_doe') {
+  console.log('A user named "john_doe" already exists.')
+}
+```
+
+#### Complex examples
 
 Checking if the desired user name already exists, when registering a new user:
 
