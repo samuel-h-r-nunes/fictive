@@ -1,6 +1,6 @@
 # fictive
 
-`fictive` provides simple tools to implement client-side mocks of services. Use it to fake API calls without the need for an internet connection, so that you can develop and demonstrate your prototype anyhwere.
+`fictive` provides simple tools to implement client-side mocks of services. Use it to fake API calls without an internet connection, so that you can develop and demonstrate your prototype anyhwere.
 
 ## Install
 
