@@ -10,35 +10,60 @@ const fixture = [
   { id: 3, content: 'ccc' }
 ]
 
-it('mocks a successful response', () => {
+const fakeDB = new FakeDB()
+beforeEach(() => {
+  fakeDB.create('table', fixture)
+})
+
+// Support function to inspect internal table content
+const contentOf = function (name) {
+  return this.storage[name]
+}.bind(fakeDB)
+
+test('mocks a successful response', () => {
   return expect(fakeReply('success')).resolves.toEqual('success')
 })
 
-it('mocks an error response', () => {
+test('mocks an error response', () => {
   return expect(fakeError('error')).rejects.toEqual('error')
 })
 
-it('mocks a database table select', () => {
-  const fakeDB = new FakeDB()
-  fakeDB.create('table', fixture)
-  return expect(fakeDB.search('table', (entry) => entry.id === 2)).toEqual([{ id: 2, content: 'bbb' }])
+test('mocks a database table create', () => {
+  const data = [
+    { id: 1, name: 'one' },
+    { id: 2, name: 'two' }
+  ]
+  fakeDB.create('newtable', data)
+  expect(contentOf('newtable')).toEqual(data)
 })
 
-it('mocks a database table insert', () => {
-  const fakeDB = new FakeDB()
-  fakeDB.create('table', fixture)
-  return expect(fakeDB.insert('table', { content: 'new entry' }, 'id')).toEqual(4)
+test('mocks a database table search', () => {
+  expect(fakeDB.search('table', (entry) => entry.id === 2)).toEqual([{ id: 2, content: 'bbb' }])
 })
 
-it('mocks a database table delete', () => {
-  const fakeDB = new FakeDB()
-  fakeDB.create('table', fixture)
-  return expect(fakeDB.delete('table', (entry) => entry.id === 2)).toEqual(1)
+test('mocks a database table insert', () => {
+  expect(fakeDB.insert('table', { content: 'new entry' }, 'id')).toEqual(4)
+  expect(contentOf('table')).toEqual([
+    { id: 1, content: 'aaa' },
+    { id: 2, content: 'bbb' },
+    { id: 3, content: 'ccc' },
+    { id: 4, content: 'new entry' }
+  ])
 })
 
-it('mocks a database table create, insert and select', () => {
-  const fakeDB = new FakeDB()
-  fakeDB.create('table', fixture)
-  fakeDB.insert('table', { content: 'new entry' }, 'id')
-  return expect(fakeDB.search('table', (entry) => entry.id === 4)).toEqual([{ id: 4, content: 'new entry' }])
+test('mocks a database table update', () => {
+  expect(fakeDB.update('table', { content: 'modified' }, (entry) => entry.id === 2)).toEqual(1)
+  expect(contentOf('table')).toEqual([
+    { id: 1, content: 'aaa' },
+    { id: 2, content: 'modified' },
+    { id: 3, content: 'ccc' }
+  ])
+})
+
+test('mocks a database table delete', () => {
+  expect(fakeDB.delete('table', (entry) => entry.id === 2)).toEqual(1)
+  expect(contentOf('table')).toEqual([
+    { id: 1, content: 'aaa' },
+    { id: 3, content: 'ccc' }
+  ])
 })

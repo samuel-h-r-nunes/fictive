@@ -7,17 +7,23 @@ class FakeDB {
   }
 
   /**
-   * Create a new entity
+   * Create a new entity, with the specified name. If an entity with the same
+   * name already exists, it will be overwritten.
    *
    * @param {String} entityName   Name of the entity to create.
    * @param {*}      initialState Optional. This can be anything, but will
    *                              default to an empty array, if not specified.
    */
   create (entityName, initialState) {
-    if (initialState === undefined) {
-      initialState = []
+    let data = []
+    if (Array.isArray(initialState)) {
+      data = [ ...initialState ]
     }
-    this.storage[entityName] = initialState
+    else if (initialState !== undefined) {
+      data = initialState
+    }
+
+    this.storage[entityName] = data
   }
 
   /**
@@ -48,7 +54,35 @@ class FakeDB {
 
     entity.push(data)
 
-    return data[primaryKey]||undefined
+    return data[primaryKey] || undefined
+  }
+
+  /**
+   * Update entries on the specified (array type) entity
+   *
+   * @param {String}   entityName Name of the entity where to do the update. Must
+   *                              be an entity of type array, as this will behave
+   *                              like a database table.
+   * @param {Object}   data       Data object, with new values to be set on the
+   *                              matched entries.
+   * @param {Function} matchFunc  Annonymous filter function returning `true` for
+   *                              entries to be updated.
+   *
+   * @returns {Number} The number of updted entries.
+   */
+  update (entityName, data, matchFunc) {
+    const entity = arrayEntity(this.storage, entityName)
+    let matched = 0
+
+    this.storage[entityName] = entity.map((entry) => {
+      if (matchFunc(entry)) {
+        matched++
+        return { ...entry, ...data }
+      }
+      return { ...entry }
+    })
+
+    return matched
   }
 
   /**
