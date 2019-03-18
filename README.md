@@ -191,12 +191,27 @@ const insertedKey = db.insert(
 
 ##### Deleting rows
 
-You can delete one or more rows using `delete()`, and specifying the entity name and a match function to locate the rows to delete:
+To delete one or more rows, use `delete()` and specify the entity name and a match function to locate the rows to delete:
 
 ```js
 // Remove the user with `id` equal to 3
 const totalDeletions = db.delete('users', (user) => user.id === 3)
 ```
+
+##### Updating existing rows
+
+You can also update existing rows, using `update()` and specifying the entity name together with the updated data and a match function:
+
+```js
+// Change the username and password for the user with `id` equal to 2
+const totalDeletions = db.update(
+  'users',
+  { username: 'new_username', password: 'new_password' },
+  (user) => user.id === 2
+)
+```
+
+The specified data will be appended to the matched rows, overwriting any overlapping keys.
 
 ##### Searching
 
