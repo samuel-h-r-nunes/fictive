@@ -1,5 +1,7 @@
 # fictive
 
+[![Version](https://img.shields.io/npm/v/fictive.svg)](https://www.npmjs.com/package/fictive)[![MIT License](https://img.shields.io/npm/l/fictive.svg)](https://opensource.org/licenses/MIT)[![Downloads](https://img.shields.io/npm/dt/fictive.svg)](https://www.npmjs.com/package/fictive)
+
 `fictive` provides simple tools to implement client-side mocks of services. Use it to fake API calls without an internet connection, so that you can develop and demonstrate your prototype anyhwere.
 
 ## Install
