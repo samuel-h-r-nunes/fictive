@@ -111,8 +111,9 @@ class FakeDB {
    * @param {String}   entityName Name of the entity where to search. Must be
    *                              an entity of type array, as this will behave
    *                              like a database table.
-   * @param {Function} filterFunc Annonymous function that returns `true` for
-   *                              entries that are considered a match.
+   * @param {Function} filterFunc (optional) Annonymous function that returns
+   *                              `true` for entries that are considered a match.
+   *                              If omitted, all entries will be retrieved.
    *
    * @returns {Array} The results that match the filter function.
    */
