@@ -37,6 +37,14 @@ test('mocks a database table create', () => {
   expect(contentOf('newtable')).toEqual(data)
 })
 
+test('mocks getting all rows from a database table', () => {
+  expect(fakeDB.search('table')).toEqual([
+    { id: 1, content: 'aaa' },
+    { id: 2, content: 'bbb' },
+    { id: 3, content: 'ccc' }
+  ])
+})
+
 test('mocks a database table search', () => {
   expect(fakeDB.search('table', (entry) => entry.id === 2)).toEqual([{ id: 2, content: 'bbb' }])
 })

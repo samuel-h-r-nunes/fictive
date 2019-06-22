@@ -18,8 +18,7 @@ class FakeDB {
     let data = []
     if (Array.isArray(initialState)) {
       data = [ ...initialState ]
-    }
-    else if (initialState !== undefined) {
+    } else if (initialState !== undefined) {
       data = initialState
     }
 
@@ -118,6 +117,9 @@ class FakeDB {
    * @returns {Array} The results that match the filter function.
    */
   search (entityName, filterFunc) {
+    if (!filterFunc) {
+      return arrayEntity(this.storage, entityName).slice()
+    }
     return arrayEntity(this.storage, entityName).filter(filterFunc)
   }
 
