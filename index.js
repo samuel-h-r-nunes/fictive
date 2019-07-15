@@ -17,7 +17,7 @@ class FakeDB {
   create (entityName, initialState) {
     let data = []
     if (Array.isArray(initialState)) {
-      data = [ ...initialState ]
+      data = [...initialState]
     } else if (initialState !== undefined) {
       data = initialState
     }
@@ -44,7 +44,7 @@ class FakeDB {
       throw new Error(`Entry to insert is not a data object.`)
     }
     const entity = arrayEntity(this.storage, entityName)
-    let data = { ...entry }
+    const data = { ...entry }
 
     // Auto-increment primary key
     if (primaryKey) {
