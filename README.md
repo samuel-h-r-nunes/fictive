@@ -24,10 +24,10 @@
     - [Updating existing rows](#updating-existing-rows)
     - [Searching](#searching)
   - [4.4. Complex examples](#44-complex-examples)
-  - [4.5. Integrating with an existing project](#45-integrating-with-an-existing-project)
-    - [4.5.1. Introducing the `withFictive` pattern](#451-introducing-the-withfictive-pattern)
-    - [4.5.2. Limitations](#452-limitations)
-    - [4.5.3. The future](#453-the-future)
+- [5. Integrating with an existing project](#5-integrating-with-an-existing-project)
+  - [5.1. Introducing the `withFictive` pattern](#51-introducing-the-withfictive-pattern)
+  - [5.2. Limitations](#52-limitations)
+  - [5.3. The future](#53-the-future)
 
 ## 1. Installation
 
@@ -379,7 +379,7 @@ export const registerUser = (username, password) => {
 }
 ```
 
-### 4.5. Integrating with an existing project
+## 5. Integrating with an existing project
 
 So far the examples have been pretty simple. On each example we created a wrapper function which internally decides whether to use the mock API or the real one. However, to cover a big API with many endpoints this pattern can quickly become tedious.
 
@@ -401,9 +401,9 @@ export default users
 
 To minimize this problem, a possible approach could be to invert the pattern and move the check outside of the wrapper function.
 
-#### 4.5.1. Introducing the `withFictive` pattern
+### 5.1. Introducing the `withFictive` pattern
 
-Without furthe ado, here's the previous example with a few modifications:
+Without further ado, here's the previous example with a few modifications:
 
 ```js
 // src/services/users.js
@@ -449,20 +449,22 @@ export default (service, mock) => {
       ...require('./' + mock)
     }
   }
+
+  return { ...service }
 }
 ```
 
 The check for whether to use the mock API is centralized in this function, which will return either the original services or the mocked ones. As a bonus, this also means that the check now occurs only once when the services are first imported, instead of on every service call.
 
-#### 4.5.2. Limitations
+### 5.2. Limitations
 
-Before you proceed, please be warned. This is is still an experimental concept, and still not part of `fictive` itself - you will have to copy it and add it somewhere in your project yourself.
+Before you proceed, please be warned. This is is still an experimental concept, and not yet part of `fictive` itself - you will have to copy it and add it to your project yourself.
 
 Most importantly, please be aware of the following limitations:
 
 - This concept is focused on a very specific use case where the service wrappers are grouped per namespace. We believe that this is good idea to keep things organised, but it might not fit your particular use case.
-- In its current state, the `withFictive` function described above will blindly return the full mock namespace object without any validation. It won't check if an unexisting method is being mocked, or fallback to the original method if a mock is missing.
+- In its current state, the `withFictive` function described above will blindly return the full mock namespace object without any validation. It won't check if an unexisting method is being mocked, so if you make a typo you will get a messy method duplication.
 
-#### 4.5.3. The future
+### 5.3. The future
 
 Despite the current limitations, `withFictive` looks very promising as a feature to include out of the box in the future. By providing a centralized way of controlling `fictive`, it could even become the gateway for exciting new features like a proxy mode which grabs data from the real API to create new mocks.
