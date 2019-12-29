@@ -410,7 +410,7 @@ export const registerUser = (username, password) => {
 
 So far the examples have been pretty simple. On each example we created a wrapper function which internally decides whether to use the mock API or the real one. However, to cover a big API with many endpoints this pattern can quickly become tedious.
 
-This problem is especially true when integrating with an existing project, where such wrappers functions are likely to be created already. For example:
+This problem is especially true when integrating with an existing project, where such wrapper functions are likely to be created already. For example:
 
 ```js
 // src/services/users.js
