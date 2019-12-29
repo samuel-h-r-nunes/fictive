@@ -41,7 +41,7 @@ class FakeDB {
    */
   insert (entityName, entry, primaryKey) {
     if (entry.constructor !== Object) {
-      throw new Error(`Entry to insert is not a data object.`)
+      throw new Error('Entry to insert is not a data object.')
     }
     const entity = arrayEntity(this.storage, entityName)
     const data = { ...entry }

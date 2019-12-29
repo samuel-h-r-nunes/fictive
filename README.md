@@ -18,6 +18,7 @@
     - [Failure](#failure)
   - [4.3. Mocking persistent data (a fake database)](#43-mocking-persistent-data-a-fake-database)
     - [Creating the fake database](#creating-the-fake-database)
+    - [Procedural data](#procedural-data)
     - [Using the fake database](#using-the-fake-database)
     - [Inserting rows](#inserting-rows)
     - [Deleting rows](#deleting-rows)
@@ -25,7 +26,7 @@
     - [Searching](#searching)
   - [4.4. Complex examples](#44-complex-examples)
 - [5. Integrating with an existing project](#5-integrating-with-an-existing-project)
-  - [5.1. Introducing the `withFictive` pattern](#51-introducing-the-withfictive-pattern)
+  - [5.1. Introducing the withFictive pattern](#51-introducing-the-withfictive-pattern)
   - [5.2. Limitations](#52-limitations)
   - [5.3. The future](#53-the-future)
 
@@ -45,7 +46,7 @@ However, most available solutions rely on an internet connection or on a local s
 
 Let's say you're making a list of users in react. You know that you'll be fetching those users from an external API, which is already specified but not developed/available yet.
 
-So instead of calling the API directly, you simply wrap the service call in a getter/selector function. For this example we will call it `getUsers`, and call it on the `componentWillMount` of a very simple controlled component:
+So instead of calling the API directly, you should abstract it by wraping the service call in a getter/selector function. For this example we will call it `getUsers`, and call it on the `componentWillMount` of a very simple controlled component:
 
 ```js
 // src/views/UserList.js
@@ -73,7 +74,7 @@ export default class UserList extends Component {
   }
 ```
 
-So when our component is initially mounted, `getUsers` is called asynchronously. Then, as soon as its promise resolves, the local state will be updated with the new list of users, which will trigger a re-render of the list.
+When our component is initially mounted, `getUsers` is called asynchronously. Then, as soon as its promise resolves, the local state will be updated with the response data, and trigger a re-render of the list.
 
 This is a very simple example, but the important rule to retain here is: _use a wrapper function instead of calling the external service directly._
 
@@ -95,9 +96,9 @@ export const getUsers = () => {
 }
 ```
 
-First of all, our wrapper to be prepared to do whatever its original purpose was (calling the external API). But before that, there's just one extra thing - it needs to check whether to use the mocked service instead of the real one.
+First of all, our wrapper should be prepared to do whatever its original purpose was (calling the external API). But before that, there's just one extra thing - decide whether to use the mocked service instead of the real one.
 
-_(Tip: Put all your service call wrappers in a centralized place, where you can easily make changes when the specs change.)_
+_(Tip: Put all your service call wrappers in a centralized place, where you can easily make adjustments when the specs change.)_
 
 Now you can implement the mocked services using `fictive`'s shortcut methods `fakeReply`, `fakeError`, etc. If you need to simulate persistance, or simply for the conveninece of `fictive`'s pseudo-database methods, you can also use `fakeDB`:
 
@@ -275,6 +276,32 @@ Further entities can be created via separate calls to `create()`.
 
 **Note:** At the end of `db.js` we simply export our database object. Due to the way how the Node.js module system [works](https://nodejs.org/api/modules.html#modules_require_cache), every time we require this module we will get the exact same object. This means that `db.js` essentially works as a singleton for our fake database.
 
+#### Procedural data
+
+Instead of JSON files with fixed data, you may want your mocked database initial state to be defined by dynamic code. This will allow you to generate larger chucks of *up-to-date* data. It will also allow you to leverage existing business logic.
+
+To do this, you can use `FakeDB.create()` just like before but require a javascript file instead of a JSON one. In that file you can build your data as you wish, and simply export it at the end:
+
+```js
+// src/services/__mock__/proceduralData.js
+
+const data = [
+  { name: 'admin', pw: 'admin' },
+  { name: 'john_doe', pw: '12345' }
+]
+
+const users = data.map(
+  (user, i) => ({
+    id: 1 + i,
+    username: user.name,
+    password: user.pw,
+    lastLogin: (new Date()).toISOString()
+  })
+)
+
+module.exports = users
+```
+
 #### Using the fake database
 
 To make use of your fake database, you just have to import it in your service mocks:
@@ -442,11 +469,11 @@ Finally, the `withFictive` High-Order Function centralizes the decision-making:
 ```js
 // src/services/__mock__/withFictive.js
 
-export default (service, mock) => {
+export default (service, mockName) => {
   if (process.env.USE_MOCK_API) {
     return {
       ...service,
-      ...require('./' + mock)
+      ...require('./' + mockName)
     }
   }
 
@@ -462,7 +489,7 @@ Before you proceed, please be warned. This is is still an experimental concept, 
 
 Most importantly, please be aware of the following limitations:
 
-- This concept is focused on a very specific use case where the service wrappers are grouped per namespace. We believe that this is good idea to keep things organised, but it might not fit your particular use case.
+- This concept is focused on a very specific use case where the service wrappers are grouped per namespace. We believe that this is a good idea to keep things organised, but it might not fit your particular use case.
 - In its current state, the `withFictive` function described above will blindly return the full mock namespace object without any validation. It won't check if an unexisting method is being mocked, so if you make a typo you will get a messy method duplication.
 
 ### 5.3. The future

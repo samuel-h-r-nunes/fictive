@@ -37,6 +37,26 @@ test('mocks a database table create', () => {
   expect(contentOf('newtable')).toEqual(data)
 })
 
+test('mocks creating a database table with procedural data', () => {
+  const now = require('./fixture').now
+  const expected = [
+    {
+      id: 1,
+      username: 'admin',
+      password: 'admin',
+      lastLogin: now.toISOString()
+    },
+    {
+      id: 2,
+      username: 'john_doe',
+      password: '12345',
+      lastLogin: now.toISOString()
+    }
+  ]
+  fakeDB.create('proctable', require('./fixture'))
+  expect(contentOf('proctable')).toEqual(expected)
+})
+
 test('mocks getting all rows from a database table', () => {
   expect(fakeDB.search('table')).toEqual([
     { id: 1, content: 'aaa' },
